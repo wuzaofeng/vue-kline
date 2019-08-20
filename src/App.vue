@@ -1,27 +1,29 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script lang="ts">
+// import D3 from 'd3'
 import Vue from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import { getTimeSharing } from './api'
 
 export default Vue.extend({
   name: 'app',
-  components: {
-    HelloWorld
+  async created () {
+    const res = await getTimeSharing({ assetId: 'CEI.HK', level: 'LV2' })
+    console.log(res)
   }
 })
 </script>
 <style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
+html
+  height: 100%;
+body
+  overflow-x: hidden;
+  height: 100%;
+  margin: 0;
+  background-color: #132234;
+  font-family: PingFangSC-Regular,Helvetica,Arial,sans-serif;
 </style>
