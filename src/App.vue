@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts">
-// import D3 from 'd3'
 import Vue from 'vue'
 import { getTimeSharing } from './api'
 
