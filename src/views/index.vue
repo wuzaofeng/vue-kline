@@ -2,6 +2,23 @@
   <div class="index">
     <!-- 查询 -->
     <search></search>
+    <div class="idx-tab">
+      <div
+        v-for="(item, index) in marketIndex"
+        :class="['item', {'active': index === current}]"
+        :key="item.assetId"
+        @click="changeHandle(index)">
+        <p class="name">{{item.name}}</p>
+        <p class="price stock-up">{{item.preClose}}</p>
+        <div class="change">
+          <span class="stock stock-up">{{item.change}}</span>
+          <span class="stock stock-up">{{item.changePct | filterPct}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="idx-chart">
+
+    </div>
     <div class="stock-list">
       <div class="title">所有港股</div>
       <div class="content">
@@ -11,14 +28,17 @@
           <div class="th">涨跌幅</div>
           <div class="th">成交额</div>
         </div>
-        <div class="item">
+        <div
+          class="item"
+          v-for="item in list"
+          :key="item.assetId">
           <div>
-            <p class="name">中国北大荒</p>
-            <p class="code">00039.HK</p>
+            <p class="name">{{item.name}}</p>
+            <p class="code">{{item.assetId}}</p>
           </div>
-          <div class="stock">0.095</div>
-          <div class="stock">+72.73%</div>
-          <div class="price">2777.0万</div>
+          <div class="stock stock-up">{{item.price}}</div>
+          <div class="stock stock-up">{{item.changePct | filterPct}}</div>
+          <div class="price">{{item.turnover}}</div>
         </div>
       </div>
     </div>
@@ -27,14 +47,55 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { getMarketIndex, allStocks, getTimeSharing } from '@/api'
 import Search from '@/components/search.vue'
 
 export default Vue.extend({
   name: 'Index',
+  data () {
+    return {
+      current: 0,
+      count: 40,
+      level: 'LV2',
+      market: 'HK',
+      list: '',
+      idxInfo: [],
+      marketIndex: []
+    }
+  },
   components: {
     Search
   },
-  async created () {
+  filters: {
+    filterPct (val: string): string {
+      console.log(val)
+      return `+${(Number(val) * 100).toFixed(2)}%`
+    }
+  },
+  created () {
+    this.fetchMarketIndex()
+    this.fetchAllStocks()
+  },
+  methods: {
+    async fetchAllStocks () {
+      const res = await allStocks({
+        count: this.count,
+        level: this.level,
+        market: this.market
+      })
+      this.list = res.data
+    },
+    async fetchMarketIndex () {
+      const res = await getMarketIndex({
+        level: this.level,
+        position: 'HK'
+      })
+      this.marketIndex = res.data
+      console.log(this.marketIndex)
+    },
+    changeHandle (index: number) {
+      this.current = index
+    }
   }
 })
 </script>
@@ -80,4 +141,52 @@ export default Vue.extend({
     margin: 0;
     font-size: 10px;
     color: #67788c;
+
+.idx-tab
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  color: #e6eef6;
+
+  .item
+    flex: 1;
+    text-align: center;
+    background: #162639;
+    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    padding: 15px 0;
+    margin-right: 10px;
+
+    &.active
+      position: relative;
+      background: #1c2c40;
+      &::after
+        position: absolute;
+        bottom: -12px;
+        left: 50%;
+        content: "";
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #1c2c40 transparent transparent;
+
+    &:last-child
+      margin-right: 0;
+    p
+      margin: 0;
+
+    .name
+      font-size: 13px;
+
+    .price
+      font-size: 16px;
+
+    .change
+      font-size: 12px;
+
+      .stock:first-child
+        margin-right: 5px;
+
+.idx-chart
+  padding: 5px 10px;
 </style>

@@ -6,14 +6,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { getTimeSharing } from './api'
 
 export default Vue.extend({
-  name: 'app',
-  async created () {
-    const res = await getTimeSharing({ assetId: 'CEI.HK', level: 'LV2' })
-    console.log(res)
-  }
+  name: 'app'
 })
 </script>
 <style lang="stylus">
@@ -25,4 +20,7 @@ body
   margin: 0;
   background-color: #132234;
   font-family: PingFangSC-Regular,Helvetica,Arial,sans-serif;
+.stock-up {
+  color: #f03a4f!important
+}
 </style>
