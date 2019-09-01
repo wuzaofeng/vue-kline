@@ -16,9 +16,14 @@
         </div>
       </div>
     </div>
-    <div class="idx-chart">
-
+    <div class="idx-charts">
+      <div class="charts-container">
+        <charts></charts>
+      </div>
     </div>
+    <up-down-info
+      :market="marketIndex[current]">
+    </up-down-info>
     <div class="stock-list">
       <div class="title">所有港股</div>
       <div class="content">
@@ -49,6 +54,8 @@
 import Vue from 'vue'
 import { getMarketIndex, allStocks, getTimeSharing } from '@/api'
 import Search from '@/components/search.vue'
+import UpDownInfo from '@/components/up-down-info.vue'
+import Charts from '@/components/charts/index.vue'
 
 export default Vue.extend({
   name: 'Index',
@@ -64,11 +71,12 @@ export default Vue.extend({
     }
   },
   components: {
-    Search
+    Search,
+    UpDownInfo,
+    Charts
   },
   filters: {
     filterPct (val: string): string {
-      console.log(val)
       return `+${(Number(val) * 100).toFixed(2)}%`
     }
   },
@@ -91,7 +99,6 @@ export default Vue.extend({
         position: 'HK'
       })
       this.marketIndex = res.data
-      console.log(this.marketIndex)
     },
     changeHandle (index: number) {
       this.current = index
@@ -100,7 +107,7 @@ export default Vue.extend({
 })
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .stock-list
   .title
     font-size: 14px;
@@ -124,6 +131,7 @@ export default Vue.extend({
 
     & > div:first-child
       align-items: start;
+      width: 20%;
 
   .th
     padding: 10px 0;
@@ -187,6 +195,11 @@ export default Vue.extend({
       .stock:first-child
         margin-right: 5px;
 
-.idx-chart
+.idx-charts
   padding: 5px 10px;
+
+  .charts-container
+    background: rgb(19, 34, 52);
+    height: 100px;
+    width: 100%;
 </style>

@@ -12,7 +12,9 @@ export default Vue.extend({
 })
 </script>
 <style lang="stylus">
+@import '~@assets/styl/theme.styl'
 html
+  max-width: 750px;
   height: 100%;
 body
   overflow-x: hidden;
@@ -21,6 +23,9 @@ body
   background-color: #132234;
   font-family: PingFangSC-Regular,Helvetica,Arial,sans-serif;
 .stock-up {
-  color: #f03a4f!important
+  color: $stock-up!important
+}
+.stock-down {
+  color: $stock-down!important
 }
 </style>
